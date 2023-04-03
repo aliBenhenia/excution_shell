@@ -139,4 +139,6 @@ void    do_pwd();
 char	**ft_split(char const *s, char c);
 void    do_pipes(t_cmd_line *data, int len);
 void    ft_putstr(char *s);
+t_export    *data;
+t_env_list  *env_list;
 #endif

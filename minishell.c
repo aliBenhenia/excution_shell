@@ -6,7 +6,7 @@
 /*   By: abenheni <abenheni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/02 16:45:28 by abenheni         ###   ########.fr       */
+/*   Updated: 2023/04/03 18:44:16 by abenheni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ int main(int ac, char **av, char **env)
 {
 	(void)ac;
 	(void)av;
-	
     char	*line;
+
     while (1)
     {
 		line = prompt();

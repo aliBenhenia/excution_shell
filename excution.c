@@ -129,21 +129,17 @@ void  fill_env(char *env[] ,t_env_list **data)
     }
 }
 
-void    do_export(char *str[], char *env[])
+void    do_export(char *str[], char *env[],t_export **data, t_env_list *env_list)
 {
     int i;
     int j;
     int f;
-    t_export    *data;
-    t_env_list  *env_list;
-
+   
+    if (str[1] == NULL)
+        return;
     i = 1;
     j = 0;
     f = 0;
-    data = malloc(sizeof(t_export));
-    data = NULL;
-    env_list = malloc(sizeof(t_env_list));
-    env_list = NULL;
     fill_env(env,&env_list);
     while (str[i])
     {
@@ -159,29 +155,20 @@ void    do_export(char *str[], char *env[])
             }
             else if (str[i][j + 1] == '\0')
             {
-                add_var_in_list(&data, str[i]);
+                add_var_in_list(data, str[i]);
             }
             j++;
         }
         i++;
     }
-  t_env_list *new;
-   if (data)
-   {
-      new = addnew(data->var, data->value);
-      addback_env(&env_list,new);
-      data = data->next;
-   }
-        // t_env_list *head = env_list;
-        // while (head)
-        // {
-        //     printf("--> %s = %s \n",head->name , head->value);
-        //     head = head->next;
-        // }
-
     if(i == 1)
     {
-       do_env(env);
+        while (env_list)
+        {
+            printf("%s = %s\n",env_list->name, env_list->value);
+            env_list = env_list->next;
+        }
+    //    do_env(env);
     }
     // if (f == 1)
     //    perror("export");
@@ -189,6 +176,17 @@ void    do_export(char *str[], char *env[])
 
 void    excution(t_cmd_line *cmd_line, char *env[])
 {
+    static int i = 1;
+  if(i == 1)
+  {
+       
+        printf("pssssed\n");
+        data = malloc(sizeof(t_export));
+        data = NULL;
+        env_list = malloc(sizeof(t_env_list));
+        env_list = NULL;
+  }
+  i++;
     if (cmd_line->str[0] == NULL)
 		return ;
     else if (ft_strcmp(cmd_line->str[0],"echo") == 0)
@@ -209,7 +207,19 @@ void    excution(t_cmd_line *cmd_line, char *env[])
 	}
 	else if (ft_strcmp(cmd_line->str[0],"export") == 0)
 	{
-		do_export(cmd_line->str,env);
+		do_export(cmd_line->str,env,&data,env_list);
+        t_export *head = data;
+	}
+	else if (ft_strcmp(cmd_line->str[0],"act") == 0)
+	{
+        printf("hola\n");
+		t_export *head = data;
+        while (head)
+        {
+            printf("%s = %s\n",head->var,head->value);
+            head = head->next;
+        }
+        
 	}
 	else
 	{

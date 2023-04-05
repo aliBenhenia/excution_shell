@@ -6,7 +6,7 @@
 /*   By: abenheni <abenheni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/03 18:44:16 by abenheni         ###   ########.fr       */
+/*   Updated: 2023/04/04 23:34:26 by abenheni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	size_of_list(t_cmd_line *data)
 	}
 	return (counter);
 }
-void	body(char *line, char **env)
+void	body(char *line, char **env,t_env_list **env_listt , t_export **data)
 {
 	t_token_list	*tokens;
 	t_cmd_line		*cmd_line;
@@ -68,7 +68,8 @@ void	body(char *line, char **env)
 
 		//}
 		///////////////////////////////////////////////
-	excution(cmd_line,env);
+	excution(cmd_line,env,env_listt,data);
+	
 	// while (tokens)
 	// {
 	// 	printf("|%s| ", tokens->value);
@@ -92,13 +93,26 @@ int main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
     char	*line;
+	t_export    *data;
+	t_env_list  *env_list;
 
+	// data = malloc(sizeof(t_export));
+    // data = NULL;
+    // env_list = malloc(sizeof(t_env_list));
+    // env_list = NULL;
+	init_env(&data, &env_list, env);
+	// t_export *head = data;
+	// while (head)
+	// {
+	// 	printf("%s == %s\n",head->var, head->value);
+	// 	head = head->next;
+	// }
     while (1)
     {
 		line = prompt();
 		if (!ft_strcmp(line, "exit"))
 			exit(0);
 		if (line)
-			body(line, env);
+			body(line, env,&env_list,&data);
     }
 }

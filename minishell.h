@@ -132,13 +132,14 @@ typedef struct  t_export
     
 }t_export;
 
-void    excution(t_cmd_line *cmd_line, char *env[]);
+void    excution(t_cmd_line *cmd_line, char *env[],t_env_list **env_list, t_export **data);
 void    handle_echo(t_cmd_line *head);
 void    do_cd(char *path);
 void    do_pwd();
 char	**ft_split(char const *s, char c);
-void    do_pipes(t_cmd_line *data, int len);
+void    do_pipes(t_cmd_line *data, int len,char *env[]);
 void    ft_putstr(char *s);
+void	excuter(char **commands, char *env[]);
 t_export    *data;
 t_env_list  *env_list;
 #endif

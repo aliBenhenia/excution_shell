@@ -14,13 +14,14 @@ t_export	*addnew(char *var, char *value)
 void	addback_export(t_export **a, t_export *new)
 {
   t_export  *head;
-
-    head = (*a);
-    new->next = NULL;
     if((*a) == NULL)
+    {
         (*a) = new;
+    }
     else
     {
+        head = (*a);
+        new->next = NULL;
         head = (*a);
         while (head->next)
         {
@@ -99,48 +100,69 @@ int check_if_equal_is(char *str)
     }
     return (0);
 }
+int check_if_in_env(char *s,char *value, t_export *env)
+{
+    t_export *head;
 
-void    add_var_in_list(t_export **data, char *str)
+    head = env;
+    while (head)
+    {
+        if (head->var == s)
+        {
+            head->value = value;
+            return (1);
+        }
+        head= head->next;
+    }
+    return (0);
+}
+
+void    add_var_in_list(t_export **data,t_env_list **env_list, char *str)
 {
     char    **var;
-    t_export *variable;
+    t_env_list *variable;
+    t_export *variable1;
 
     if (check_if_equal_is(str))
     {
         var = ft_split(str,'=');
-        variable = addnew(var[0],var[1]);
-        addback_export(data,variable);
+        if(check_if_in_env(var[0],var[1],*data))
+        {
+                // stop here.. for modifying
+        }
+        variable1 = addnew(var[0],var[1]);
+        addback_export(data,variable1);
+        variable = addnew2(var[0],var[1]);
+        addback_env(env_list,variable);
     }
-}
-
-void  fill_env(char *env[] ,t_env_list **data)
-{
-    int i;
-    char    **name;
-    t_env_list *n;
-
-    i = 0;
-    while (env[i])
+    else
     {
-        name = ft_split(env[i], '=');
-        n = addnew2(name[0], name[1]);
-        addback_env(data,n);
-        i++;
+        var = ft_split(str,'=');
+        variable1 = addnew(var[0],"empty");
+        addback_export(data,variable1);
     }
 }
 
-void    do_export(char *str[], char *env[],t_export **data, t_env_list *env_list)
+void    do_export(char *str[], char *env[],t_export **data, t_env_list **env_list)
 {
     int i;
     int j;
-    int f;
-   
-    if (str[1] == NULL)
-        return;
+
     i = 1;
     j = 0;
     f = 0;
-    fill_env(env,&env_list);
+    if (str[1] == NULL)
+    {
+		t_export *head = (*data);
+        while (head)
+        {
+            if(head->value == "empty")
+                printf("%s \n",head->var);
+            else
+                 printf("%s = %s\n",head->var,head->value);
+            head = head->next;
+        }
+    }
     while (str[i])
     {
         j = 0;
@@ -148,45 +170,22 @@ void    do_export(char *str[], char *env[],t_export **data, t_env_list *env_list
         {
             if (ft_isalnum(str[i][j]) == 0)
             {
-                i++;
-                f = 1;
-                printf("error\n");
+                printf("error in : %s\n",str[i]);
                 break;
             }
             else if (str[i][j + 1] == '\0')
-            {
-                add_var_in_list(data, str[i]);
-            }
+                add_var_in_list(data,env_list, str[i]);
             j++;
         }
         i++;
     }
-    if(i == 1)
-    {
-        while (env_list)
-        {
-            printf("%s = %s\n",env_list->name, env_list->value);
-            env_list = env_list->next;
-        }
-    //    do_env(env);
-    }
-    // if (f == 1)
-    //    perror("export");
 }
 
-void    excution(t_cmd_line *cmd_line, char *env[])
+void    excution(t_cmd_line *cmd_line, char *env[],t_env_list **env_list , t_export **data)
 {
-    static int i = 1;
-  if(i == 1)
-  {
+
        
-        printf("pssssed\n");
-        data = malloc(sizeof(t_export));
-        data = NULL;
-        env_list = malloc(sizeof(t_env_list));
-        env_list = NULL;
-  }
-  i++;
+    
     if (cmd_line->str[0] == NULL)
 		return ;
     else if (ft_strcmp(cmd_line->str[0],"echo") == 0)
@@ -199,7 +198,12 @@ void    excution(t_cmd_line *cmd_line, char *env[])
 	}
 	else if (ft_strcmp(cmd_line->str[0],"env") == 0)
 	{
-		do_env(env);
+		t_env_list *head = (*env_list);
+        while (head)
+        {
+            printf("%s = %s\n",head->name,head->value);
+            head = head->next;
+        }
 	}
 	else if (ft_strcmp(cmd_line->str[0],"pwd") == 0)
 	{
@@ -207,25 +211,13 @@ void    excution(t_cmd_line *cmd_line, char *env[])
 	}
 	else if (ft_strcmp(cmd_line->str[0],"export") == 0)
 	{
-		do_export(cmd_line->str,env,&data,env_list);
-        t_export *head = data;
-	}
-	else if (ft_strcmp(cmd_line->str[0],"act") == 0)
-	{
-        printf("hola\n");
-		t_export *head = data;
-        while (head)
-        {
-            printf("%s = %s\n",head->var,head->value);
-            head = head->next;
-        }
-        
+		do_export(cmd_line->str,env,data,env_list);
 	}
 	else
 	{
 		if (size_of_list(cmd_line) == 1)
 			excute_one_cmd(cmd_line,env);
 		else if(size_of_list(cmd_line) > 1)
-			do_pipes(cmd_line, size_of_list(cmd_line));
+			do_pipes(cmd_line, size_of_list(cmd_line),env);
 	}
 }

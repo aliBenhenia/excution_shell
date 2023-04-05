@@ -76,11 +76,7 @@ void    first_cmd(t_cmd_line *data, char *env[])
 {
     t_cmd_line *head= data;
 	int fd;
-	// while (head)
-	// {
-	// 	printf("%s | %d \n",head->redirections->file, head->redirections->type);
-	// 	head->redirections = head->redirections->next;
-	// }
+
 	
     while (head->redirections)
     {

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void    do_pipes(t_cmd_line *data, int len)
+void    do_pipes(t_cmd_line *data, int len,char *env[])
 {
     int i;
     int pid;
@@ -15,6 +15,7 @@ void    do_pipes(t_cmd_line *data, int len)
         if (pid == 0)
         {
             dup2(fd[1],1);
+            dup2(fd[0],0);
         }
     }
 }

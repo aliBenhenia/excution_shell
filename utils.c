@@ -25,7 +25,7 @@ int	ft_strncmp(const char *str1, const char *str2, size_t n)
 int	ft_isalnum(int c)
 {
 	if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
-		|| (c >= 'A' && c <= 'Z') || c == '_' )
+		|| (c >= 'A' && c <= 'Z'))
 		return (1);
 	return (0);
 }
@@ -73,6 +73,8 @@ void	ft_lstclear(t_token_list	**lst)
 {
 	t_token_list	*tmp;
 
+	if (!*lst)
+		return ;
 	tmp = *lst;
 	while (tmp)
 	{
@@ -164,6 +166,8 @@ char	*ft_strchr(char *str, int c)
 	int		i;
 	char	*ptr;
 
+	if (!str)
+		return (NULL);
 	if (c == '\0')
 		return ((char *)str + ft_strlen(str));
 	ptr = (NULL);
@@ -193,7 +197,7 @@ void    addback(t_token_list **tokens, char *value, int type)
     t_token_list    *curr;
 
     curr = *tokens;
-	if (!*value)
+	if (!value || !*value)
 		return ;
     if (!*tokens)
         *tokens = new_token(value, type);
@@ -358,4 +362,20 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	str = ft_split1(str, s, c);
 	return (str);
+}
+
+char	*ft_strndup(char *src, int len)
+{
+	int		i;
+	char	*new;
+	if (len == 0)
+		return (NULL);
+	i = 0;
+	new = malloc(sizeof(char) * len + 1);
+	if (!(new))
+		return (NULL);
+	while (*src && i < len)
+		new[i++] = *src++;
+	new[i] = '\0';
+	return (new);
 }

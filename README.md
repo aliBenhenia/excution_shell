@@ -1,7 +1,1 @@
-# excution_shell
-
-
-
-
-
-
+# minihell

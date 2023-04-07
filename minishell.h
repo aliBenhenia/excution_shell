@@ -36,7 +36,7 @@ typedef struct redirections
 {
     int					type;
     char				*file;
-        int fd;
+    int fd;
 	struct redirections *next;
 }t_redirections;
 
@@ -64,19 +64,27 @@ typedef	struct env_list
 
 typedef struct tools
 {
-    int after_variable;
+    int there_is_dollar;
+    int s_quote;
+    int d_quote;
+    int no_expand;
+    int dollar_in;
 }t_tools;
 
-
 // Tokenizer Utils
-t_token_list *tokenizer(char *line, int *i);
-char    *is_redirections(t_token_list **tokens, char *line);
-char    *is_wspace(t_token_list **tokens, char *line);
-char    *is_dollar_pipe(t_token_list **tokens, char *line);
-char    *is_word(t_token_list **tokens, char *line);
-char    *is_squote(t_token_list **tokens, char *line, int *open, t_tools *tools);
-char	*is_dquote(t_token_list **tokens, char *line, int *open, t_tools *tools);
-char	*afdollar(t_token_list **tokens, char *line, t_tools *tools);
+t_token_list    *tokenizer(char *line, t_tools *tools);
+char			*is_redirections(t_token_list **tokens, char *line, t_tools *tools);
+char			*is_wspace(t_token_list **tokens, char *line);
+char			*is_dollar_pipe(t_token_list **tokens, char *line);
+char			*is_word(t_token_list **tokens, char *line);
+char			*is_squote(t_token_list **tokens, char *line, t_tools *tools);
+char			*is_dquote(t_token_list **tokens, char *line, t_tools *tools);
+char			*afdollar(t_token_list **tokens, char *line);
+char			*is_space(t_token_list **tokens, char *line);
+char			*ft_dquotes(t_token_list **tokens, char *line, t_tools *tools);
+char	*no_expand(t_token_list **tokens, char	*line, t_tools *tools);
+void	open_quote_error(t_token_list **tokens);
+
 
 // Expander
 void	expand(t_token_list **tokens, t_env_list **env);
@@ -108,7 +116,7 @@ int		count(char *line);
 int		inside_quotes(char *line, int i);
 int     all_spaces(char *line, int i);
 int     inside_quotes(char *line, int i);
-char    *handle_quotes(char *line);
+char    *handle_quotes(t_token_list **tokens, char *line);
 char    *check_redirections(char *line);
 char    *check_pipe(char *line);
 char    *skip_wspaces(char *line);
@@ -122,7 +130,7 @@ void    free_node(t_token_list **tokens);
 t_token_list *new_token(char *value, int type);
 char	*ft_itoa(int n);
 char	*ft_strdup(char *src);
-
+char	*ft_strndup(char *src, int len);
 //excution
 typedef struct  t_export
 {
@@ -142,4 +150,6 @@ void    ft_putstr(char *s);
 void	excuter(char **commands, char *env[]);
 t_export    *data;
 t_env_list  *env_list;
+
+
 #endif

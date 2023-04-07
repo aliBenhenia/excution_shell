@@ -24,9 +24,7 @@ void	addback_export(t_export **a, t_export *new)
 		new->next = NULL;
 		head = (*a);
 		while (head->next)
-		{
 			head = head->next;
-		}
 		head->next = new;
 	}
 }
@@ -308,42 +306,62 @@ int	check_name_is_exist(char *s, t_export *export)
 	}
 	return(0);
 }
-// Function to remove a node from the linked list based on a given string
-void removeNode(t_export **head, char *str) {
-    // Check if the head node needs to be removed
-    while (*head != NULL && strcmp((*head)->var, str) == 0) {
-        t_export *temp = *head;
-        *head = (*head)->next;
-        free(temp);
-    }
-    
-    // Traverse the linked list and remove nodes
-    t_export *current = *head;
-    while (current != NULL && current->next != NULL) {
-        if (strcmp(current->next->var, str) == 0) {
-            t_export *temp = current->next;
-            current->next = temp->next;
-            free(temp);
-        } else {
-            current = current->next;
-        }
-    }
-}
-int	remove_name(char *s, t_export **export)
+
+void removeNode(t_export **export, char *str)
 {
 	t_export	*head;
+	t_export	*temp;
 
-	head = export;
-	while (head)
+	head = (*export);
+	if(head == NULL)
+		return;
+	if(head != NULL && ft_strcmp(head->var,str) == 0)
 	{
-		if(ft_strcmp(head->var,s) == 0)
-		{
-			removeNode(export,s);
-		}
-		head = head->next;
+		temp = (*export);
+		(*export) = (*export)->next;
+		free(temp);
+		return ;
 	}
-	return(0);
+	while (head != NULL && head->next != NULL)
+	{
+		if (ft_strcmp(head->next->var,str) == 0)
+		{
+			temp = head->next;
+			head->next = temp->next;
+			free(temp);
+		}
+		else
+			head = head->next;
+	}
 }
+void removeNode2(t_env_list **env, char *str)
+{
+	t_env_list	*head;
+	t_env_list	*temp;
+
+	head = (*env);
+	if(head == NULL)
+		return;
+	if(head != NULL && ft_strcmp(head->name,str) == 0)
+	{
+		temp = (*env);
+		(*env) = (*env)->next;
+		free(temp);
+		return ;
+	}
+	while (head != NULL && head->next != NULL)
+	{
+		if (ft_strcmp(head->next->name,str) == 0)
+		{
+			temp = head->next;
+			head->next = temp->next;
+			free(temp);
+		}
+		else
+			head = head->next;
+	}
+}
+
 void    do_unset(char *str[], char *env[],t_export **data, t_env_list **env_list)
 {
 	int	i;
@@ -354,10 +372,14 @@ void    do_unset(char *str[], char *env[],t_export **data, t_env_list **env_list
 	while (str[i])
 	{
 		if(check_name_is_exist(str[i],(*data)))
+		{
 			removeNode(data,str[i]);
+			removeNode2(env_list,str[i]);
+		}
+		else
+			error_od_export(str[i]);
 		i++;
 	}
-	
 
 }
 void    excution(t_cmd_line *cmd_line, char *env[],t_env_list **env_list , t_export **data)
@@ -373,7 +395,7 @@ void    excution(t_cmd_line *cmd_line, char *env[],t_env_list **env_list , t_exp
 		t_env_list *head = (*env_list);
 		while (head)
 		{
-			printf("%s=%s\n",head->name,head->value);
+			printf("%s=\"%s\"\n",head->name,head->value);
 			head = head->next;
 		}
 	}
@@ -388,6 +410,10 @@ void    excution(t_cmd_line *cmd_line, char *env[],t_env_list **env_list , t_exp
 		if (size_of_list(cmd_line) == 1)
 			excute_one_cmd(cmd_line,env);
 		else if(size_of_list(cmd_line) > 1)
+		{
 			do_pipes(cmd_line, size_of_list(cmd_line),env);
+			wait(NULL);
+		}
+			
 	}
 }

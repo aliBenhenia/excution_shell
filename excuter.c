@@ -98,8 +98,7 @@ void    first_cmd(t_cmd_line *data, char *env[])
             }
         head->redirections = head->redirections->next;
     }
-		excuter(head->str,env);
-	
+	excuter(head->str,env);
 }
 
 void    excute_one_cmd(t_cmd_line *data, char *env[])

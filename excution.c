@@ -123,7 +123,7 @@ char *get_name(char *s)
 		return (NULL);
 	while (s[i] && s[i] != '=')
 	{
-		if(s[i] == '+' && s[i + 1] == '=')
+		if(s[i] == '+' && s[i + 1] == '=' && i > 2)
 			break;
 		i++;
 	}
@@ -132,7 +132,7 @@ char *get_name(char *s)
 	while (s[i] && s[i]  != '=')
 	{
 		p[i] = s[i];
-		if(s[i] == '+' && s[i + 1] == '=')
+		if(s[i] == '+' && s[i + 1] == '=' && i > 2)
 			break;
 		i++;
 	}
@@ -384,7 +384,7 @@ void    do_unset(char *str[], char *env[],t_export **data, t_env_list **env_list
 }
 void    excution(t_cmd_line *cmd_line, char *env[],t_env_list **env_list , t_export **data)
 {
-	if (cmd_line->str[0] == NULL)
+	if (cmd_line == NULL)
 		return ;
 	else if (ft_strcmp(cmd_line->str[0],"echo") == 0)
 		handle_echo(cmd_line);

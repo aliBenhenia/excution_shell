@@ -10,11 +10,10 @@ char	*check_path(char *paths[], char *commands[])
 	{
 		var1 = ft_strjoin("/", commands[0]);
 		ful = ft_strjoin(paths[i++], var1);
-		i++;
 		if (access(ful, F_OK) == 0)
 			return (ful);
-		free(ful);
-		free(var1);
+		// free(ful);
+		// free(var1);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: abenheni <abenheni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/04 23:34:26 by abenheni         ###   ########.fr       */
+/*   Updated: 2023/04/06 16:36:17 by abenheni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	body(char *line, char **env,t_env_list **env_listt , t_export **data)
 		env_vars_list(&env_list, env);
 		expand(&tokens, &env_list);
 		parser(&cmd_line, tokens);
-		
 	}
 			// if (cmd_line->redirections)
 			// {

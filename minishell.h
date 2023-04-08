@@ -140,6 +140,13 @@ char	**ft_split(char const *s, char c);
 void    do_pipes(t_cmd_line *data, int len,char *env[]);
 void    ft_putstr(char *s);
 void	excuter(char **commands, char *env[]); 
+void    do_pwd(void);
+int	size_of_list(t_cmd_line *data);
+void    excute_one_cmd(t_cmd_line *data, char *env[]);
+void	print_env(t_env_list **env);
+void	error_od_export(char *s);
+void    do_export(char *str[], char *env[],t_export **data, t_env_list **env_list);
+void    do_unset(char *str[], char *env[],t_export **data, t_env_list **env_list);
 // t_export    *data;
 // t_env_list  *env_list;
 #endif
